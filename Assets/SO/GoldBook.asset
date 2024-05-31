@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1620f302a42c5e349a3e30e1264047a2, type: 3}
+  m_Name: GoldBook
+  m_EditorClassIdentifier: 
+  img: {fileID: -341492315, guid: dcf774f92ea8d974f86b7c181fbaf644, type: 3}
+  weight: 5
+  itemDiscription: 'A gold book which can increase any of your stat by 5 '
+  rarity: 1
+  itemtypes: 0
+  buyCost: 125
+  sellCost: 60
+  itemName: Gold Book
