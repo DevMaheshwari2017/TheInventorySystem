@@ -20,13 +20,14 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     private static bool isDraggingItem;
 
     //Getter
+    public ItemDisplay GetItemDisplay() => itemDisplay;
     public bool GetIsDraggingItem() => isDraggingItem;
    // Setter
     public void SetParentTransform(Transform transform)
     {
         parentAfterDrag = transform;
     }
-    public ItemDisplay GetItemDisplay() => itemDisplay;
+
     private void Awake()
     {
         canvas = GetComponentInParent<Canvas>();

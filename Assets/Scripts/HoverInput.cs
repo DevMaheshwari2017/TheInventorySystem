@@ -17,6 +17,7 @@ public class HoverInput : MonoBehaviour, IPointerEnterHandler,IPointerExitHandle
 
     //getter
     public bool GetIsItemInInevntory() => isItemInInventory;
+    public ItemDisplay GetItemDisplay() => itemDisplay;
     private void Awake()
     {
         itemDisplay = GetComponentInParent<ItemDisplay>();

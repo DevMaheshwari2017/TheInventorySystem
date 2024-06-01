@@ -19,10 +19,19 @@ public class EventService
     public EventController<Vector2> OnShowDiscWindow { get; private set; }
     public EventController OnHideDiscWindow { get; private set; }
 
+    public EventController<float> OnBuyingItemIncreaesWeight { get; private set; }
+    public EventController<int> OnBuyingItemDecreaseCoin { get; private set; }
+    public EventController<int> OnSellingItemIncreaseCoin { get; private set; }
+    public EventController<float> OnSellingItemDecreaseWeight { get; private set; }
+
     EventService() 
     {
         OnGetItemEvent = new EventController();
         OnHideDiscWindow = new EventController();
         OnShowDiscWindow = new EventController<Vector2>();
+        OnBuyingItemIncreaesWeight = new EventController<float>();
+        OnBuyingItemDecreaseCoin = new EventController<int>();
+        OnSellingItemIncreaseCoin = new EventController<int>();
+        OnSellingItemDecreaseWeight = new EventController<float>();
     }
 }

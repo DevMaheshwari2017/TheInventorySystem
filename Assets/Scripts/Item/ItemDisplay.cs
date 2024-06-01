@@ -26,6 +26,7 @@ public class ItemDisplay : MonoBehaviour
 
     //Getter
     public SO GetItemSO() => itemSO;
+    public int GetTotalItemQuantity() => totalItemQuantity;
     public bool GetIsIconVisisble() => isIconVisible;
     public bool IsItemSOEmpty() 
     {

@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 public class InventorySlot : MonoBehaviour, IDropHandler
 {
     [SerializeField]
+    private ItemDiscriptionDisplay itemDiscriptionDisplay;
+    [SerializeField]
     DragableItem dragableItem;
     [SerializeField]
     private RectTransform droppedRect;
@@ -13,24 +15,27 @@ public class InventorySlot : MonoBehaviour, IDropHandler
     [SerializeField]
     private SO itemSO;
 
-    private bool droppedSuccessfully = false;
-
-    //getter
-    public InventorySlot GetInventorySlot() => this;
-    public bool GetItemDroppedSuccessfully() => droppedSuccessfully;
+    //Getter
     public SO GetItemSO() => itemSO;
+
+    //setter
+    public void SetItemSO(SO _itemSO) 
+    {
+        itemSO = _itemSO;
+    }
 
     public void OnDrop(PointerEventData eventData)
     {
-        Debug.Log("OnDrop called");
         dropped = eventData.pointerDrag;
         dragableItem = dropped.GetComponent<DragableItem>();
         if (dropped != null && dragableItem != null)
         {
+            //dropped item successfully
+            ItemDisplay itemDisplay = dragableItem.GetItemDisplay();
             dragableItem.SetParentTransform(transform);
-            itemSO = dragableItem.GetItemDisplay().GetItemSO();
-            Debug.Log("Dropping item into slot: " + dropped.name);
-            droppedSuccessfully = true;
+            itemSO = itemDisplay.GetItemSO();
+            EventService.Instance.OnBuyingItemDecreaseCoin?.InvokeEvent(itemDisplay.GetTotalItemQuantity() * itemSO.buyCost);
+            EventService.Instance.OnBuyingItemIncreaesWeight?.InvokeEvent(itemDisplay.GetTotalItemQuantity() * itemSO.weight);
         }
         else 
         {
@@ -38,5 +43,9 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         }
     }
 
+    private void ItemPurchased() 
+    {
+        itemSO = itemDiscriptionDisplay.GetItemSO();
+    }
  
 }
