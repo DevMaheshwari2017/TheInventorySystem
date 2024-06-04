@@ -32,14 +32,13 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     {
         canvas = GetComponentInParent<Canvas>();
         //rectTransform = GetComponent<RectTransform>();
-        itemDisplay = GetComponentInParent<ItemDisplay>();
+        itemDisplay = GetComponent<ItemDisplay>();
 
     }
     private void Update()
     {
         if (!isDraggingItem)
         {
-            Debug.Log(" Dragging item is " + isDraggingItem);
             checkForItemSlotEmpty = itemDisplay.IsItemSOEmpty();
         }
     }
@@ -50,6 +49,9 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
        
         if (checkForItemSlotEmpty == true)
             return;
+
+        ItemDisplay itemCloneDisplay;
+        int totalQuantity = itemDisplay.GetTotalItemQuantity();
 
         isDraggingItem = true;
         itemClone = Instantiate(gameObject, transform.position, Quaternion.identity);
@@ -62,6 +64,17 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         itemClone.transform.SetParent(transform.root);
         itemClone.transform.SetAsLastSibling();
         itemClone.transform.localScale = gameObject.transform.localScale;
+
+        itemCloneDisplay = itemClone.GetComponent<ItemDisplay>();
+        if (itemCloneDisplay != null)
+        {
+            Debug.Log(" Total quantity is " + totalQuantity);
+            itemCloneDisplay.SetTotalQuantity(totalQuantity);
+        }
+        else
+        {
+            Debug.LogWarning("Item clone display is null");
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -70,6 +83,7 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
             return;
         isDraggingItem = true;
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+        EventService.Instance.OnPurchasedItem?.InvokeEvent(0);
     }
 
     public void OnEndDrag(PointerEventData eventData)

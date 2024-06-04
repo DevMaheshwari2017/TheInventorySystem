@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -35,6 +33,13 @@ public class ItemDisplay : MonoBehaviour
         return false;
     }
 
+    //Setter
+    public void SetTotalQuantity(int _quantity) 
+    {
+        totalItemQuantity = _quantity;
+        Debug.Log("Set the ttal quantity to " + totalItemQuantity);
+    }
+
     public void SetItemSO(SO item)
     {
         itemSO = item;
@@ -52,13 +57,11 @@ public class ItemDisplay : MonoBehaviour
     }
     private void Start()
     {
-        HideIconImage();
-        AssignItemSOToItemSlots();
+        //AssignItemSOToItemSlots();
     }
 
     private void Update()
-    {
-        
+    {        
         totalItemQuantityText.text = totalItemQuantity.ToString();
     }
 
@@ -86,7 +89,7 @@ public class ItemDisplay : MonoBehaviour
         }
     }
 
-    private void ShowIconImage() 
+    public void ShowIconImage() 
     {
         //to set alpha to 1
         if (itemSO != null) 
@@ -98,9 +101,10 @@ public class ItemDisplay : MonoBehaviour
         }
     }
 
-    private void HideIconImage() 
+    public void HideIconImage() 
     {
         //to set alpha to 0
+        Debug.Log("Alpha is 0 ");
         isIconVisible = false;
         var tempcolor = img.color;
         tempcolor.a = 0f;

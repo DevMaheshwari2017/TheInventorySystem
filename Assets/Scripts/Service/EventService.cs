@@ -1,18 +1,18 @@
 
 using UnityEngine;
-public class EventService 
+public class EventService
 {
-    private static EventService instance; 
+    private static EventService instance;
     public static EventService Instance
-    { get 
+    { get
         {
             if (instance == null)
             {
                 instance = new EventService();
             }
-                return instance;
-            
-        } 
+            return instance;
+
+        }
     }
 
     public EventController OnGetItemEvent { get; private set; }
@@ -24,6 +24,10 @@ public class EventService
     public EventController<int> OnSellingItemIncreaseCoin { get; private set; }
     public EventController<float> OnSellingItemDecreaseWeight { get; private set; }
 
+    public EventController<int> OnPurchasedItem { get; private set; }
+    public EventController<int> OnSoldItem { get; private set; }
+
+
     EventService() 
     {
         OnGetItemEvent = new EventController();
@@ -33,5 +37,7 @@ public class EventService
         OnBuyingItemDecreaseCoin = new EventController<int>();
         OnSellingItemIncreaseCoin = new EventController<int>();
         OnSellingItemDecreaseWeight = new EventController<float>();
+        OnPurchasedItem = new EventController<int>();
+        OnSoldItem = new EventController<int>();
     }
 }

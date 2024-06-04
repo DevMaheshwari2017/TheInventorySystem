@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -23,10 +21,9 @@ public class UIManager : MonoBehaviour
     private ItemDiscriptionDisplay itemDiscriptionDisplay;
 
     private float weight = 0;
-
+    
     private void Awake()
     {
-
         coinText.text = coin.ToString();
         weightText.text = weight.ToString() + " / " + totalWeight.ToString();
     }
@@ -76,18 +73,35 @@ public class UIManager : MonoBehaviour
         weightText.text = weight.ToString() + " / " + totalWeight.ToString();
     }
 
-    //private void ItemPurchased() 
-    //{
-    //    for (int i = 0; i < inventorySlots.Length; i++)
-    //    {
-    //        if (inventorySlots[i].GetItemSO() == null)
-    //        {
-    //            inventorySlots[i].SetItemSO(itemDiscriptionDisplay.GetItemSO());
-    //        }
-    //        else if (inventorySlots[i].GetItemSO() == itemDiscriptionDisplay.GetItemSO()) 
-    //        {
-    //             += itemDiscriptionDisplay.GetQuantity();
-    //        }
-    //    }
-    //}
+    public void ItemPurchased(Transform item)
+    {
+        for (int i = 0; i < inventorySlots.Length; i++)
+        {
+            if (inventorySlots[i].GetItemSO() == null && itemDiscriptionDisplay.GetQuantity() > 0)
+            {
+                 Debug.Log("item purchased and item set to inventory" + inventorySlots[i]);
+                 inventorySlots[i].SetItemSO(itemDiscriptionDisplay.GetItemSO());
+                 GameObject itemClone = Instantiate(itemDiscriptionDisplay.GetHoverInput().gameObject, inventorySlots[i].transform);
+                UpdateQuantity(itemDiscriptionDisplay.GetQuantity(), itemClone.GetComponent<ItemDisplay>());
+                break;
+            }
+            //else if (inventorySlots[i].GetItemSO() == itemDiscriptionDisplay.GetItemSO())
+            //{
+            //     += itemDiscriptionDisplay.GetQuantity();
+            //}
+        }
+    }
+
+    public void UpdateQuantity(int quantity, ItemDisplay itemDisplay)
+    {
+        int totalQauntity = 0;
+        Debug.Log("updating quantity ");
+
+        if (quantity > 0)// using manual qunatity optin in disc window 
+        {
+            totalQauntity += quantity;
+            Debug.Log("The total item qunatity in inventory using manual is " + totalQauntity);
+        }
+        itemDisplay.SetTotalQuantity(totalQauntity);
+    }
 }

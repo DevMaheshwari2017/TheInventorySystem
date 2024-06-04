@@ -44,7 +44,9 @@ public class ItemDiscriptionDisplay : MonoBehaviour
 
     //Getter
     public SO GetItemSO() => itemSO;
+    public int GetQuantity() => quantity;
 
+    public HoverInput GetHoverInput() => hoverInput;
     //setter
     public void SetItemSO(SO newItemSO) 
     {
@@ -79,6 +81,7 @@ public class ItemDiscriptionDisplay : MonoBehaviour
 
     private void ShowDisplay( Vector2 mousePos) 
     {
+        quantity = 0;
         if (itemSO == null)
         {
             Debug.LogError("ItemSO is null.");
@@ -95,7 +98,7 @@ public class ItemDiscriptionDisplay : MonoBehaviour
         buyCost.GetComponent<TextMeshProUGUI>().text = " Buy Cost : " + itemSO.buyCost.ToString();
         sellCost.GetComponent<TextMeshProUGUI>().text = " Sell Cost : " + itemSO.sellCost.ToString();
 
-        
+        Debug.Log("The total item qauntity is " + hoverInput.GetItemDisplay().GetTotalItemQuantity());
         if (hoverInput.GetIsItemInInevntory())
         {
             ShowSellText();
@@ -142,12 +145,19 @@ public class ItemDiscriptionDisplay : MonoBehaviour
 
     private void BuyButton()
     {
+        if (quantity <= 0)
+            return;
+        GameService.Instance.GetUIManager().ItemPurchased(hoverInput.gameObject.transform);
+        GameService.Instance.GetUIManager().UpdateQuantity(quantity, hoverInput.GetItemDisplay());
         EventService.Instance.OnBuyingItemDecreaseCoin?.InvokeEvent(quantity * itemSO.buyCost);
         EventService.Instance.OnBuyingItemIncreaesWeight?.InvokeEvent(quantity * itemSO.weight);
+        
     }
     private void SellButton()
     {
-        EventService.Instance.OnBuyingItemDecreaseCoin?.InvokeEvent(quantity * itemSO.sellCost);
+        if (quantity <= 0)
+            return;
+        EventService.Instance.OnSellingItemIncreaseCoin?.InvokeEvent(quantity * itemSO.sellCost);
         EventService.Instance.OnSellingItemDecreaseWeight?.InvokeEvent(quantity * itemSO.weight);
     }
 
