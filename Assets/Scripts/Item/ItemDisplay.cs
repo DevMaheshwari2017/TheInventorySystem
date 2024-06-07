@@ -26,7 +26,7 @@ public class ItemDisplay : MonoBehaviour
     public SO GetItemSO() => itemSO;
     public int GetTotalItemQuantity() => totalItemQuantity;
     public bool GetIsIconVisisble() => isIconVisible;
-    public bool IsItemSOEmpty() 
+    public bool IsItemSOEmpty()
     {
         if (itemSO == null)
             return true;
@@ -34,7 +34,7 @@ public class ItemDisplay : MonoBehaviour
     }
 
     //Setter
-    public void SetTotalQuantity(int _quantity) 
+    public void SetTotalQuantity(int _quantity)
     {
         totalItemQuantity = _quantity;
         Debug.Log("Set the ttal quantity to " + totalItemQuantity);
@@ -49,37 +49,35 @@ public class ItemDisplay : MonoBehaviour
     {
         EventService.Instance.OnGetItemEvent.AddListner(AssignItemSOToItemSlots);
         EventService.Instance.OnGetItemEvent.AddListner(ShowIconImage);
+        //EventService.Instance.OnPurchasedItem.AddListner(DecereaseTotalQuntity);
     }
     private void OnDisable()
     {
         EventService.Instance.OnGetItemEvent.RemoveListner(AssignItemSOToItemSlots);
         EventService.Instance.OnGetItemEvent.RemoveListner(ShowIconImage);
-    }
-    private void Start()
-    {
-        //AssignItemSOToItemSlots();
+        //EventService.Instance.OnPurchasedItem.RemoveListner(DecereaseTotalQuntity);
     }
 
     private void Update()
-    {        
+    {
         totalItemQuantityText.text = totalItemQuantity.ToString();
     }
 
-    public void ClearItemSO() 
+    public void ClearItemSO()
     {
         itemSO = null;
         totalItemQuantity = 0;
-        
+
         HideIconImage();
     }
-    public void UpdateTotalItemQuantity() 
+    public void UpdateTotalItemQuantity()
     {
         totalItemQuantity++;
     }
 
-    private void AssignItemSOToItemSlots() 
+    private void AssignItemSOToItemSlots()
     {
-        if(itemSO == null) 
+        if (itemSO == null)
         {
             totalSO = soDataBaseContainer.sos.Length;
             rand = Random.Range(0, totalSO);
@@ -89,19 +87,19 @@ public class ItemDisplay : MonoBehaviour
         }
     }
 
-    public void ShowIconImage() 
+    private void ShowIconImage()
     {
         //to set alpha to 1
-        if (itemSO != null) 
-        { 
-          isIconVisible = true;
-          var tempcolor = img.color;
-          tempcolor.a = 1f;
-          img.color = tempcolor;
+        if (itemSO != null)
+        {
+            isIconVisible = true;
+            var tempcolor = img.color;
+            tempcolor.a = 1f;
+            img.color = tempcolor;
         }
     }
 
-    public void HideIconImage() 
+    private void HideIconImage()
     {
         //to set alpha to 0
         Debug.Log("Alpha is 0 ");
@@ -109,5 +107,25 @@ public class ItemDisplay : MonoBehaviour
         var tempcolor = img.color;
         tempcolor.a = 0f;
         img.color = tempcolor;
+    }
+
+    public void DecereaseTotalQuntity(int quantity) 
+    {
+        totalItemQuantity -= quantity;
+        if (totalItemQuantity <= 0) 
+        {
+            Debug.Log("clearing the item as quantity is 0 now ");
+            ClearItemSO();
+
+            InventorySlot inventorySlot = GetComponentInParent<InventorySlot>();
+
+            if (inventorySlot != null) 
+            {
+                Debug.Log("Cleaing item from the inventory after selling all of it");
+                inventorySlot.ClearItemSO();
+            }
+        }
+        Debug.Log("The total quantity that got minus is " + quantity);
+        Debug.Log("Total remaning quantity is " + totalItemQuantity);
     }
 }

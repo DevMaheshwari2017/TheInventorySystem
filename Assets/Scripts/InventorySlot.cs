@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 public class InventorySlot : MonoBehaviour, IDropHandler
@@ -15,8 +13,6 @@ public class InventorySlot : MonoBehaviour, IDropHandler
     [SerializeField]
     private SO itemSO;
 
-    private int totalQuanity = 0;
-    private float timer = 1f;
     //Getter
     public SO GetItemSO() => itemSO;
 
@@ -26,19 +22,6 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         itemSO = _itemSO;
     }
 
-    private void Update()
-    {
-        timer -= Time.deltaTime;
-    }
-    private void OnEnable()
-    {
-        //EventService.Instance.OnPurchasedItem.AddListner(UpdateQuantity);
-    }
-
-    private void OnDisable()
-    {
-        //EventService.Instance.OnPurchasedItem.RemoveListner(UpdateQuantity);        
-    }
     public void OnDrop(PointerEventData eventData)
     {
         dropped = eventData.pointerDrag;
@@ -56,6 +39,13 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         {
             Debug.LogError(" PointerDrag is NUll ");
         }
+    }
+
+    public void ClearItemSO() 
+    {
+        ItemDisplay itemDisplay = GetComponentInChildren<ItemDisplay>();
+        itemSO = null;
+        Destroy(itemDisplay.gameObject);
     }
 
 }

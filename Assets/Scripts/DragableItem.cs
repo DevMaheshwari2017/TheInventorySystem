@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
@@ -31,7 +28,6 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     private void Awake()
     {
         canvas = GetComponentInParent<Canvas>();
-        //rectTransform = GetComponent<RectTransform>();
         itemDisplay = GetComponent<ItemDisplay>();
 
     }
@@ -83,7 +79,6 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
             return;
         isDraggingItem = true;
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
-        EventService.Instance.OnPurchasedItem?.InvokeEvent(0);
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -99,13 +94,12 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         if (inventorySlot == null)
         {
             Debug.LogError("InventorySlot empty");
-            //rectTransform.anchoredPosition = pos;
             Destroy(itemClone);
             isDraggingItem = false;
         }
         else
         {
-            //itemDisplay.ClearItemSO();
+            itemDisplay.ClearItemSO();
             Debug.Log("Found Inventory Slot");
             rectTransform.anchoredPosition = new Vector2(0, -1);
             itemClone.GetComponent<DragableItem>().enabled = false;

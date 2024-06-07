@@ -254,7 +254,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7260107056556146640}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5920963801179141726}
+        m_TargetAssemblyTypeName: TypeButtons, Assembly-CSharp
+        m_MethodName: ShowMaterials
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &290167458166761450
 GameObject:
   m_ObjectHideFlags: 0
@@ -1081,7 +1093,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2397341642933953045}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5920963801179141726}
+        m_TargetAssemblyTypeName: TypeButtons, Assembly-CSharp
+        m_MethodName: ShowTreasures
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1526082723938679613
 GameObject:
   m_ObjectHideFlags: 0
@@ -2844,7 +2868,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3779376099879242405}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5920963801179141726}
+        m_TargetAssemblyTypeName: TypeButtons, Assembly-CSharp
+        m_MethodName: ShowConsumables
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4409518513293715193
 GameObject:
   m_ObjectHideFlags: 0
@@ -4300,7 +4336,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemDisplay:
-  - {fileID: 3097260215773146254}
+  - {fileID: 0}
   - {fileID: 7424123171587517154}
   - {fileID: 3635295106618292987}
   - {fileID: 864833204544004971}
@@ -6478,6 +6514,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7266477325028389952, guid: 873a237546808e34d8144061c9c39c0f, type: 3}
+    - {fileID: 4366932264998159754, guid: 873a237546808e34d8144061c9c39c0f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -6506,17 +6543,6 @@ MonoBehaviour:
   img: {fileID: 7532744327857306568}
   soDataBaseContainer: {fileID: 11400000, guid: d0b82b7c4e2cb474a8acde3d339e1ce4, type: 2}
   itemSO: {fileID: 0}
---- !u!114 &3097260215773146254 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4366932264998159754, guid: 873a237546808e34d8144061c9c39c0f, type: 3}
-  m_PrefabInstance: {fileID: 1612807651512805636}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2128375854924185040}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37c894371103cda4a90722050ffc33a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3773691647288885376 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2467691724935309700, guid: 873a237546808e34d8144061c9c39c0f, type: 3}
