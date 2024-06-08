@@ -43,7 +43,9 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public void OnBeginDrag(PointerEventData eventData)
     {
        
-        if (checkForItemSlotEmpty == true)
+        if (checkForItemSlotEmpty == true 
+            || GameService.Instance.GetUIManager().NotEnoughCoin(itemDisplay.GetItemSO().buyCost * itemDisplay.GetTotalItemQuantity())
+            || GameService.Instance.GetUIManager().WeightOverload())
             return;
 
         ItemDisplay itemCloneDisplay;
@@ -64,7 +66,6 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         itemCloneDisplay = itemClone.GetComponent<ItemDisplay>();
         if (itemCloneDisplay != null)
         {
-            Debug.Log(" Total quantity is " + totalQuantity);
             itemCloneDisplay.SetTotalQuantity(totalQuantity);
         }
         else
@@ -76,6 +77,7 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public void OnDrag(PointerEventData eventData)
     {
         if (checkForItemSlotEmpty == true)
+
             return;
         isDraggingItem = true;
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
@@ -93,18 +95,15 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
         if (inventorySlot == null)
         {
-            Debug.LogError("InventorySlot empty");
             Destroy(itemClone);
             isDraggingItem = false;
         }
         else
         {
             itemDisplay.ClearItemSO();
-            Debug.Log("Found Inventory Slot");
             rectTransform.anchoredPosition = new Vector2(0, -1);
             itemClone.GetComponent<DragableItem>().enabled = false;
             isDraggingItem = false;
         }
-        Debug.Log("Parent after drag is : " + parentAfterDrag);
     }
 }

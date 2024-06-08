@@ -84,6 +84,7 @@ public class ItemDisplay : MonoBehaviour
             itemSO = soDataBaseContainer.sos[rand];
             img.sprite = itemSO.img;
             UpdateTotalItemQuantity();
+           
         }
     }
 
@@ -96,6 +97,7 @@ public class ItemDisplay : MonoBehaviour
             var tempcolor = img.color;
             tempcolor.a = 1f;
             img.color = tempcolor;
+            totalItemQuantityText.gameObject.SetActive(true);
         }
     }
 
@@ -107,6 +109,7 @@ public class ItemDisplay : MonoBehaviour
         var tempcolor = img.color;
         tempcolor.a = 0f;
         img.color = tempcolor;
+        totalItemQuantityText.gameObject.SetActive(false);
     }
 
     public void DecereaseTotalQuntity(int quantity) 
@@ -114,18 +117,14 @@ public class ItemDisplay : MonoBehaviour
         totalItemQuantity -= quantity;
         if (totalItemQuantity <= 0) 
         {
-            Debug.Log("clearing the item as quantity is 0 now ");
             ClearItemSO();
 
             InventorySlot inventorySlot = GetComponentInParent<InventorySlot>();
 
             if (inventorySlot != null) 
             {
-                Debug.Log("Cleaing item from the inventory after selling all of it");
                 inventorySlot.ClearItemSO();
             }
         }
-        Debug.Log("The total quantity that got minus is " + quantity);
-        Debug.Log("Total remaning quantity is " + totalItemQuantity);
     }
 }

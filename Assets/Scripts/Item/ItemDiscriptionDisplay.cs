@@ -145,15 +145,13 @@ public class ItemDiscriptionDisplay : MonoBehaviour
 
     private void BuyButton()
     {
-        if (quantity <= 0)
+        if (quantity <= 0 || GameService.Instance.GetUIManager().NotEnoughCoin(itemSO.buyCost * quantity) || GameService.Instance.GetUIManager().WeightOverload())
             return;
 
-        int called = 0;
-        Debug.Log("getting called " + ++called);
+        
         GameService.Instance.GetUIManager().ItemPurchased(hoverInput.gameObject.transform);
         EventService.Instance.OnBuyingItemDecreaseCoin?.InvokeEvent(quantity * itemSO.buyCost);
         EventService.Instance.OnBuyingItemIncreaesWeight?.InvokeEvent(quantity * itemSO.weight);
-        //EventService.Instance.OnPurchasedItem?.InvokeEvent(quantity);
         hoverInput.GetItemDisplay().DecereaseTotalQuntity(quantity);
         
     }
@@ -161,6 +159,7 @@ public class ItemDiscriptionDisplay : MonoBehaviour
     {
         if (quantity <= 0)
             return;
+         
         EventService.Instance.OnSellingItemIncreaseCoin?.InvokeEvent(quantity * itemSO.sellCost);
         EventService.Instance.OnSellingItemDecreaseWeight?.InvokeEvent(quantity * itemSO.weight);
         hoverInput.GetItemDisplay().DecereaseTotalQuntity(quantity);

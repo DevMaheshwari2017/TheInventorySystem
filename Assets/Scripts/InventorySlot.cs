@@ -30,8 +30,8 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         {
             //dropped item successfully
             ItemDisplay itemDisplay = dragableItem.GetItemDisplay();
-            dragableItem.SetParentTransform(transform);
             itemSO = itemDisplay.GetItemSO();
+            dragableItem.SetParentTransform(transform);
             EventService.Instance.OnBuyingItemDecreaseCoin?.InvokeEvent(itemDisplay.GetTotalItemQuantity() * itemSO.buyCost);
             EventService.Instance.OnBuyingItemIncreaesWeight?.InvokeEvent(itemDisplay.GetTotalItemQuantity() * itemSO.weight);
         }

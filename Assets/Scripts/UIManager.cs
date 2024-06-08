@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System;
+using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
@@ -19,9 +19,15 @@ public class UIManager : MonoBehaviour
     private TextMeshProUGUI coinText;
     [SerializeField]
     private ItemDiscriptionDisplay itemDiscriptionDisplay;
+    [SerializeField]
+    private Animator weightOverloadAnimator;
+    [SerializeField]
+    private GameObject weightOverloadGameobejct;  
+    [SerializeField]
+    private GameObject notEnoughCoinGameobejct;
 
     private float weight = 0;
-    
+
     private void Awake()
     {
         coinText.text = coin.ToString();
@@ -47,30 +53,38 @@ public class UIManager : MonoBehaviour
         getItemButton.onClick.AddListener(GetItems);
     }
 
-    private void GetItems() 
-    {      
+    private void GetItems()
+    {
         EventService.Instance.OnGetItemEvent.InvokeEvent();
     }
 
-    private void IncreaseCoinAmount(int increaseCoinAmount) 
+    private void IncreaseCoinAmount(int increaseCoinAmount)
     {
         coin += increaseCoinAmount;
         coinText.text = coin.ToString();
     }
-    private void DecreaseCoinAmount(int decreaseCoinAmount) 
+    private void DecreaseCoinAmount(int decreaseCoinAmount)
     {
         coin -= decreaseCoinAmount;
         coinText.text = coin.ToString();
     }
-    private void IncreaseWeight(float _weight) 
+    private void IncreaseWeight(float _weight)
     {
         weight += _weight;
         weightText.text = weight.ToString() + " / " + totalWeight.ToString();
+        if (weight >= totalWeight)
+        {
+            weightText.color = Color.red;
+        }
     }
-    private void DecreaseWeight(float _weight) 
+    private void DecreaseWeight(float _weight)
     {
         weight -= _weight;
         weightText.text = weight.ToString() + " / " + totalWeight.ToString();
+        if (weight < totalWeight)
+        {
+           weightText.color = Color.white;          
+        }
     }
 
     public void ItemPurchased(Transform item)
@@ -79,9 +93,9 @@ public class UIManager : MonoBehaviour
         {
             if (inventorySlots[i].GetItemSO() == null && itemDiscriptionDisplay.GetQuantity() > 0)
             {
-                 Debug.Log("item purchased and item set to inventory" + inventorySlots[i]);
-                 inventorySlots[i].SetItemSO(itemDiscriptionDisplay.GetItemSO());
-                 GameObject itemClone = Instantiate(itemDiscriptionDisplay.GetHoverInput().gameObject, inventorySlots[i].transform);
+                Debug.Log("item purchased and item set to inventory" + inventorySlots[i]);
+                inventorySlots[i].SetItemSO(itemDiscriptionDisplay.GetItemSO());
+                GameObject itemClone = Instantiate(itemDiscriptionDisplay.GetHoverInput().gameObject, inventorySlots[i].transform);
                 UpdateQuantity(itemDiscriptionDisplay.GetQuantity(), itemClone.GetComponent<ItemDisplay>());
                 break;
             }
@@ -92,7 +106,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void UpdateQuantity(int quantity, ItemDisplay itemDisplay)
+    private void UpdateQuantity(int quantity, ItemDisplay itemDisplay)
     {
         int totalQauntity = 0;
         Debug.Log("updating quantity ");
@@ -103,5 +117,46 @@ public class UIManager : MonoBehaviour
             Debug.Log("The total item qunatity in inventory using manual is " + totalQauntity);
         }
         itemDisplay.SetTotalQuantity(totalQauntity);
+    }
+
+    private IEnumerator ShowWieghtOverload() {
+            weightOverloadAnimator.enabled = true;
+            weightOverloadGameobejct.SetActive(true);
+            weightOverloadAnimator.Play("WeightOverload");
+            yield return new WaitForSeconds(weightOverloadAnimator.runtimeAnimatorController.animationClips.Length * 5);
+            weightOverloadAnimator.enabled = false;
+            yield return new WaitForSeconds(3.0f);
+            weightOverloadGameobejct.SetActive(false);
+    }
+
+    private IEnumerator ShowNotEnoughCoin() 
+    {
+        notEnoughCoinGameobejct.SetActive(true);
+        yield return new WaitForSeconds(4.0f);
+        notEnoughCoinGameobejct.SetActive(false);
+
+    }
+
+    public bool WeightOverload() 
+    {
+        Debug.Log("Checking for weight overload");
+        if (weight >= totalWeight)
+        {          
+            Debug.Log("Weight overloaded");
+           StartCoroutine(ShowWieghtOverload());
+            return true;
+        }
+       return false;
+    }
+
+    public bool NotEnoughCoin(int amount) 
+    {
+        if (coin < amount)
+        {
+            Debug.Log("Not enough coin");
+           StartCoroutine(ShowNotEnoughCoin());
+            return true;
+        }
+        return false;
     }
 }

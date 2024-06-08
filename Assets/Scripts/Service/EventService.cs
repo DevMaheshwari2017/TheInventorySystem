@@ -24,8 +24,6 @@ public class EventService
     public EventController<int> OnSellingItemIncreaseCoin { get; private set; }
     public EventController<float> OnSellingItemDecreaseWeight { get; private set; }
 
-    public EventController<int> OnPurchasedItem { get; private set; }
-    public EventController<int> OnSoldItem { get; private set; }
 
 
     EventService() 
@@ -37,7 +35,5 @@ public class EventService
         OnBuyingItemDecreaseCoin = new EventController<int>();
         OnSellingItemIncreaseCoin = new EventController<int>();
         OnSellingItemDecreaseWeight = new EventController<float>();
-        OnPurchasedItem = new EventController<int>();
-        OnSoldItem = new EventController<int>();
     }
 }
