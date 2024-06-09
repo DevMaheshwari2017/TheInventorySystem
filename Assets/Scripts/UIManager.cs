@@ -27,7 +27,7 @@ public class UIManager : MonoBehaviour
     private GameObject notEnoughCoinGameobejct;
 
     private float weight = 0;
-
+    private bool isSimilarItemInInventory;
     private void Awake()
     {
         coinText.text = coin.ToString();
@@ -89,43 +89,73 @@ public class UIManager : MonoBehaviour
 
     public void ItemPurchased(Transform item)
     {
-        for (int i = 0; i < inventorySlots.Length; i++)
+        FoundSimilarItemInInventory();
+        if (isSimilarItemInInventory == false)
         {
-            if (inventorySlots[i].GetItemSO() == null && itemDiscriptionDisplay.GetQuantity() > 0)
+            for (int i = 0; i < inventorySlots.Length; i++)
             {
-                Debug.Log("item purchased and item set to inventory" + inventorySlots[i]);
-                inventorySlots[i].SetItemSO(itemDiscriptionDisplay.GetItemSO());
-                GameObject itemClone = Instantiate(itemDiscriptionDisplay.GetHoverInput().gameObject, inventorySlots[i].transform);
-                UpdateQuantity(itemDiscriptionDisplay.GetQuantity(), itemClone.GetComponent<ItemDisplay>());
-                break;
+                if (inventorySlots[i].GetItemSO() == null && itemDiscriptionDisplay.GetQuantity() > 0)
+                {
+                    Debug.Log("item purchased and item set to inventory" + inventorySlots[i]);
+                    inventorySlots[i].SetItemSO(itemDiscriptionDisplay.GetItemSO());
+                    GameObject itemClone = Instantiate(itemDiscriptionDisplay.GetHoverInput().gameObject, inventorySlots[i].transform);
+                    UpdateQuantity(itemDiscriptionDisplay.GetQuantity(), itemClone.GetComponent<ItemDisplay>());
+                    break;
+                }
             }
-            //else if (inventorySlots[i].GetItemSO() == itemDiscriptionDisplay.GetItemSO())
-            //{
-            //     += itemDiscriptionDisplay.GetQuantity();
-            //}
         }
     }
 
+    public void FoundSimilarItemInInventory() 
+    {
+        for (int i = 0; i < inventorySlots.Length; i++)
+        {
+            if (inventorySlots[i].GetItemSO() != null && inventorySlots[i].GetItemSO() == itemDiscriptionDisplay.GetItemSO())
+            {
+                Debug.Log("Found similar item in inventory");
+                isSimilarItemInInventory = true;
+                ItemDisplay itemDisplay = inventorySlots[i].GetComponentInChildren<ItemDisplay>();
+                itemDisplay.SetTotalQuantity(itemDisplay.GetTotalItemQuantity() + itemDiscriptionDisplay.GetQuantity());
+                break;
+            }
+            isSimilarItemInInventory = false;
+        }
+    }
+
+    public void DroppingSImiliarItemInInventory(ItemDisplay itemDisplay) 
+    {
+        for (int i = 0; i < inventorySlots.Length; i++)
+        {
+            if(inventorySlots[i].GetItemSO() != null && inventorySlots[i].GetItemSO() == itemDisplay.GetItemSO())
+            {
+                ItemDisplay _itemDisplay = inventorySlots[i].GetComponentInChildren<ItemDisplay>();
+                if (_itemDisplay != null)
+                {
+                    _itemDisplay.SetTotalQuantity(itemDisplay.GetTotalItemQuantity() + _itemDisplay.GetTotalItemQuantity());
+                    Destroy(itemDisplay.gameObject);
+                    Debug.Log("Found similar item in inventory when dropping" + itemDisplay.gameObject.name);
+                }
+            }
+        }
+    }
     private void UpdateQuantity(int quantity, ItemDisplay itemDisplay)
     {
         int totalQauntity = 0;
-        Debug.Log("updating quantity ");
 
         if (quantity > 0)// using manual qunatity optin in disc window 
         {
             totalQauntity += quantity;
-            Debug.Log("The total item qunatity in inventory using manual is " + totalQauntity);
         }
         itemDisplay.SetTotalQuantity(totalQauntity);
     }
 
     private IEnumerator ShowWieghtOverload() {
-            weightOverloadAnimator.enabled = true;
+            //weightOverloadAnimator.enabled = true;
             weightOverloadGameobejct.SetActive(true);
-            weightOverloadAnimator.Play("WeightOverload");
-            yield return new WaitForSeconds(weightOverloadAnimator.runtimeAnimatorController.animationClips.Length * 5);
-            weightOverloadAnimator.enabled = false;
-            yield return new WaitForSeconds(3.0f);
+           // weightOverloadAnimator.Play("WeightOverload");
+           // yield return new WaitForSeconds(weightOverloadAnimator.runtimeAnimatorController.animationClips.Length * 5);
+            //weightOverloadAnimator.enabled = false;
+            yield return new WaitForSeconds(3.5f);
             weightOverloadGameobejct.SetActive(false);
     }
 
@@ -137,12 +167,10 @@ public class UIManager : MonoBehaviour
 
     }
 
-    public bool WeightOverload() 
+    public bool WeightOverload(float _weight) 
     {
-        Debug.Log("Checking for weight overload");
-        if (weight >= totalWeight)
+        if (weight + _weight >= totalWeight)
         {          
-            Debug.Log("Weight overloaded");
            StartCoroutine(ShowWieghtOverload());
             return true;
         }
@@ -153,7 +181,6 @@ public class UIManager : MonoBehaviour
     {
         if (coin < amount)
         {
-            Debug.Log("Not enough coin");
            StartCoroutine(ShowNotEnoughCoin());
             return true;
         }

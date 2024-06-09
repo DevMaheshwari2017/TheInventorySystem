@@ -28,8 +28,6 @@ public class HoverInput : MonoBehaviour, IPointerEnterHandler,IPointerExitHandle
         if (eventData.pointerDrag != null && eventData.pointerDrag.GetComponent<DragableItem>().GetIsDraggingItem())
             return;
 
-        //if (eventData.pointerDrag != null)
-        //    Debug.Log(" dragging item " + eventData.pointerDrag + " " + eventData.pointerDrag.GetComponent<DragableItem>().GetIsDraggingItem());
         if (eventData.pointerEnter.name == itemCloneName) 
         {
             inventorySlot = GetComponentInParent<InventorySlot>();

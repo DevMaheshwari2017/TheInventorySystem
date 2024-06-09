@@ -37,7 +37,6 @@ public class ItemDisplay : MonoBehaviour
     public void SetTotalQuantity(int _quantity)
     {
         totalItemQuantity = _quantity;
-        Debug.Log("Set the ttal quantity to " + totalItemQuantity);
     }
 
     public void SetItemSO(SO item)
@@ -104,7 +103,6 @@ public class ItemDisplay : MonoBehaviour
     private void HideIconImage()
     {
         //to set alpha to 0
-        Debug.Log("Alpha is 0 ");
         isIconVisible = false;
         var tempcolor = img.color;
         tempcolor.a = 0f;

@@ -87,6 +87,7 @@ public class ItemDiscriptionDisplay : MonoBehaviour
             Debug.LogError("ItemSO is null.");
             return;
         }
+        StopAllCoroutines();
         img.sprite = itemSO.img;
         weight.text = " Weight : " + itemSO.weight.ToString();
         itemDiscription.text = itemSO.itemDiscription;
@@ -98,7 +99,6 @@ public class ItemDiscriptionDisplay : MonoBehaviour
         buyCost.GetComponent<TextMeshProUGUI>().text = " Buy Cost : " + itemSO.buyCost.ToString();
         sellCost.GetComponent<TextMeshProUGUI>().text = " Sell Cost : " + itemSO.sellCost.ToString();
 
-        Debug.Log("The total item qauntity is " + hoverInput.GetItemDisplay().GetTotalItemQuantity());
         if (hoverInput.GetIsItemInInevntory())
         {
             ShowSellText();
@@ -145,7 +145,7 @@ public class ItemDiscriptionDisplay : MonoBehaviour
 
     private void BuyButton()
     {
-        if (quantity <= 0 || GameService.Instance.GetUIManager().NotEnoughCoin(itemSO.buyCost * quantity) || GameService.Instance.GetUIManager().WeightOverload())
+        if (quantity <= 0 || GameService.Instance.GetUIManager().NotEnoughCoin(itemSO.buyCost * quantity) || GameService.Instance.GetUIManager().WeightOverload(itemSO.weight * quantity))
             return;
 
         
@@ -153,6 +153,7 @@ public class ItemDiscriptionDisplay : MonoBehaviour
         EventService.Instance.OnBuyingItemDecreaseCoin?.InvokeEvent(quantity * itemSO.buyCost);
         EventService.Instance.OnBuyingItemIncreaesWeight?.InvokeEvent(quantity * itemSO.weight);
         hoverInput.GetItemDisplay().DecereaseTotalQuntity(quantity);
+        HideDiscDisplay();
         
     }
     private void SellButton()
@@ -163,6 +164,7 @@ public class ItemDiscriptionDisplay : MonoBehaviour
         EventService.Instance.OnSellingItemIncreaseCoin?.InvokeEvent(quantity * itemSO.sellCost);
         EventService.Instance.OnSellingItemDecreaseWeight?.InvokeEvent(quantity * itemSO.weight);
         hoverInput.GetItemDisplay().DecereaseTotalQuntity(quantity);
+        HideDiscDisplay();
         
     }
 

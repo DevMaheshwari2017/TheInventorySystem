@@ -30,8 +30,18 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         {
             //dropped item successfully
             ItemDisplay itemDisplay = dragableItem.GetItemDisplay();
+
+            if (GameService.Instance.GetUIManager().NotEnoughCoin(itemDisplay.GetItemSO().buyCost * itemDisplay.GetTotalItemQuantity())
+            || GameService.Instance.GetUIManager().WeightOverload(itemDisplay.GetItemSO().weight * itemDisplay.GetTotalItemQuantity()))
+            {
+                Debug.Log("On Drop weight overload"); 
+                return;
+            }
+
             itemSO = itemDisplay.GetItemSO();
             dragableItem.SetParentTransform(transform);
+
+            GameService.Instance.GetUIManager().DroppingSImiliarItemInInventory(itemDisplay);
             EventService.Instance.OnBuyingItemDecreaseCoin?.InvokeEvent(itemDisplay.GetTotalItemQuantity() * itemSO.buyCost);
             EventService.Instance.OnBuyingItemIncreaesWeight?.InvokeEvent(itemDisplay.GetTotalItemQuantity() * itemSO.weight);
         }
