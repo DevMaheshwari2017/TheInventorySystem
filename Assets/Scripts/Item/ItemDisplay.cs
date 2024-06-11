@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -26,12 +24,19 @@ public class ItemDisplay : MonoBehaviour
 
     //Getter
     public SO GetItemSO() => itemSO;
+    public int GetTotalItemQuantity() => totalItemQuantity;
     public bool GetIsIconVisisble() => isIconVisible;
-    public bool IsItemSOEmpty() 
+    public bool IsItemSOEmpty()
     {
         if (itemSO == null)
             return true;
         return false;
+    }
+
+    //Setter
+    public void SetTotalQuantity(int _quantity)
+    {
+        totalItemQuantity = _quantity;
     }
 
     public void SetItemSO(SO item)
@@ -43,66 +48,81 @@ public class ItemDisplay : MonoBehaviour
     {
         EventService.Instance.OnGetItemEvent.AddListner(AssignItemSOToItemSlots);
         EventService.Instance.OnGetItemEvent.AddListner(ShowIconImage);
+        //EventService.Instance.OnPurchasedItem.AddListner(DecereaseTotalQuntity);
     }
     private void OnDisable()
     {
         EventService.Instance.OnGetItemEvent.RemoveListner(AssignItemSOToItemSlots);
         EventService.Instance.OnGetItemEvent.RemoveListner(ShowIconImage);
-    }
-    private void Start()
-    {
-        HideIconImage();
-        AssignItemSOToItemSlots();
+        //EventService.Instance.OnPurchasedItem.RemoveListner(DecereaseTotalQuntity);
     }
 
     private void Update()
     {
-        
         totalItemQuantityText.text = totalItemQuantity.ToString();
     }
 
-    public void ClearItemSO() 
+    public void ClearItemSO()
     {
         itemSO = null;
         totalItemQuantity = 0;
-        
+
         HideIconImage();
     }
-    public void UpdateTotalItemQuantity() 
+    public void UpdateTotalItemQuantity()
     {
         totalItemQuantity++;
     }
 
-    private void AssignItemSOToItemSlots() 
+    private void AssignItemSOToItemSlots()
     {
-        if(itemSO == null) 
+        if (itemSO == null)
         {
             totalSO = soDataBaseContainer.sos.Length;
             rand = Random.Range(0, totalSO);
             itemSO = soDataBaseContainer.sos[rand];
             img.sprite = itemSO.img;
             UpdateTotalItemQuantity();
+           
         }
     }
 
-    private void ShowIconImage() 
+    private void ShowIconImage()
     {
         //to set alpha to 1
-        if (itemSO != null) 
-        { 
-          isIconVisible = true;
-          var tempcolor = img.color;
-          tempcolor.a = 1f;
-          img.color = tempcolor;
+        if (itemSO != null)
+        {
+            isIconVisible = true;
+            var tempcolor = img.color;
+            tempcolor.a = 1f;
+            img.color = tempcolor;
+            totalItemQuantityText.gameObject.SetActive(true);
         }
     }
 
-    private void HideIconImage() 
+    private void HideIconImage()
     {
         //to set alpha to 0
         isIconVisible = false;
         var tempcolor = img.color;
         tempcolor.a = 0f;
         img.color = tempcolor;
+        totalItemQuantityText.gameObject.SetActive(false);
+    }
+
+    public void DecereaseTotalQuntity(int quantity) 
+    {
+        totalItemQuantity -= quantity;
+        if (totalItemQuantity <= 0) 
+        {
+            ClearItemSO();
+
+            InventorySlot inventorySlot = GetComponentInParent<InventorySlot>();
+
+            if (inventorySlot != null) 
+            {
+                inventorySlot.ClearItemSO();
+            }
+        }
     }
 }
