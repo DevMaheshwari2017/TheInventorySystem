@@ -40,10 +40,15 @@ public class InventorySlot : MonoBehaviour, IDropHandler
 
             itemSO = itemDisplay.GetItemSO();
             dragableItem.SetParentTransform(transform);
-
-            GameService.Instance.GetUIManager().DroppingSImiliarItemInInventory(itemDisplay);
             EventService.Instance.OnBuyingItemDecreaseCoin?.InvokeEvent(itemDisplay.GetTotalItemQuantity() * itemSO.buyCost);
             EventService.Instance.OnBuyingItemIncreaesWeight?.InvokeEvent(itemDisplay.GetTotalItemQuantity() * itemSO.weight);
+
+            if (GameService.Instance.GetUIManager().DroppingSImiliarItemInInventory(itemDisplay)) 
+            {
+                Debug.Log("Destroying item clone ");
+                dragableItem.DestryItemCLone();
+                itemSO = null;
+            }
         }
         else 
         {

@@ -110,4 +110,9 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
             isDraggingItem = false;
         }
     }
+
+    public void DestryItemCLone() 
+    {
+        Destroy(itemClone);
+    }
 }

@@ -122,7 +122,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void DroppingSImiliarItemInInventory(ItemDisplay itemDisplay) 
+    public bool DroppingSImiliarItemInInventory(ItemDisplay itemDisplay) 
     {
         for (int i = 0; i < inventorySlots.Length; i++)
         {
@@ -132,11 +132,13 @@ public class UIManager : MonoBehaviour
                 if (_itemDisplay != null)
                 {
                     _itemDisplay.SetTotalQuantity(itemDisplay.GetTotalItemQuantity() + _itemDisplay.GetTotalItemQuantity());
-                    Destroy(itemDisplay.gameObject);
+                   // Destroy(itemDisplay.gameObject);
                     Debug.Log("Found similar item in inventory when dropping" + itemDisplay.gameObject.name);
+                    return true;
                 }
             }
         }
+            return false;
     }
     private void UpdateQuantity(int quantity, ItemDisplay itemDisplay)
     {
