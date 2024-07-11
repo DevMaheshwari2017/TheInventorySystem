@@ -40,6 +40,9 @@ The project includes a stylish pixelated UI and icons, giving the game a unique 
 
 ## Preview
 
+### [Web-To-Play](https://outscal.com/devmaheswari2017/game/play-the-inventory-system-game)
+
+### Gameplay Video :
 
 [![Inventory & Shop System Video](https://img.youtube.com/vi/SIf6im5-LOc/0.jpg)](https://www.youtube.com/watch?v=SIf6im5-LOc)
  
