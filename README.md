@@ -6,7 +6,7 @@ In this project, I developed a comprehensive inventory and shop system for games
 
 ## Key Features
 
-Drag and Drop Functionality: Allows players to easily manage their inventory by dragging and dropping items.
+**Drag and Drop Functionality:** Allows players to easily manage their inventory by dragging and dropping items.
 
 **Buy and Sell System:** Players can purchase and sell items within the game.
 
@@ -37,4 +37,9 @@ Drag and Drop Functionality: Allows players to easily manage their inventory by 
 ## Visuals
 
 The project includes a stylish pixelated UI and icons, giving the game a unique and cool appearance.
+
+## Preview
+
+
+[!Inventory & Shop System Video](https://img.youtube.com/vi/SIf6im5-LOc/0.jpg)](https://www.youtube.com/watch?v=SIf6im5-LOc)
  
