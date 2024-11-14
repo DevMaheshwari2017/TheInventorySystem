@@ -34,10 +34,19 @@ public class ItemDiscriptionDisplay : MonoBehaviour
     private GameObject sellCost;
     [SerializeField]
     private TextMeshProUGUI itemName;
+    [SerializeField]
+    private Button sellButton;
+    [SerializeField]
+    private Button buyButton;
 
     private HoverInput hoverInput;
     private int quantity;
 
+    //Getter
+    public SO GetItemSO() => itemSO;
+    public int GetQuantity() => quantity;
+
+    public HoverInput GetHoverInput() => hoverInput;
     //setter
     public void SetItemSO(SO newItemSO) 
     {
@@ -50,21 +59,20 @@ public class ItemDiscriptionDisplay : MonoBehaviour
     }
     private void OnEnable()
     {
-        EventService.Instance.OnShowDiscWindow.AddListner(ShowDisplay);
-        //EventService.Instance.OnHideDiscWindow.AddListner(HideDiscDisplay);
+        EventService.Instance.OnShowDiscWindow.AddListner(ShowDisplay);        
     }
     private void OnDisable()
     {
         EventService.Instance.OnShowDiscWindow.RemoveListner(ShowDisplay);
-        //EventService.Instance.OnHideDiscWindow.RemoveListner(HideDiscDisplay);
     }
     private void Update()
     {
         quantityText.text = quantity.ToString();
-        //CheckForItemParent();
     }
     private void Start()
     {
+        sellButton.onClick.AddListener(SellButton);
+        buyButton.onClick.AddListener(BuyButton);
         closeDiscWindowButton.onClick.AddListener(HideDiscDisplay);
         addButton.onClick.AddListener(IncreaseQuantity);
         subButton.onClick.AddListener(DecereaseQuantity);
@@ -73,12 +81,13 @@ public class ItemDiscriptionDisplay : MonoBehaviour
 
     private void ShowDisplay( Vector2 mousePos) 
     {
-        Debug.Log("Inside showDisplay");
+        quantity = 0;
         if (itemSO == null)
         {
             Debug.LogError("ItemSO is null.");
             return;
         }
+        StopAllCoroutines();
         img.sprite = itemSO.img;
         weight.text = " Weight : " + itemSO.weight.ToString();
         itemDiscription.text = itemSO.itemDiscription;
@@ -90,18 +99,20 @@ public class ItemDiscriptionDisplay : MonoBehaviour
         buyCost.GetComponent<TextMeshProUGUI>().text = " Buy Cost : " + itemSO.buyCost.ToString();
         sellCost.GetComponent<TextMeshProUGUI>().text = " Sell Cost : " + itemSO.sellCost.ToString();
 
-        
         if (hoverInput.GetIsItemInInevntory())
         {
             ShowSellText();
+            sellButton.gameObject.SetActive(true);
+            buyButton.gameObject.SetActive(false);
         }
         else
         {
             ShowBuyText();
+            sellButton.gameObject.SetActive(false);
+            buyButton.gameObject.SetActive(true);
         }
 
         discWindow.gameObject.SetActive(true);
-        Debug.Log("Showing Disc window with item" + itemSO);
         ShowDiscWindowAtCentre(mousePos);
     }
 
@@ -132,9 +143,34 @@ public class ItemDiscriptionDisplay : MonoBehaviour
         discWindow.anchoredPosition = adjustedPosition;
     }
 
+    private void BuyButton()
+    {
+        if (quantity <= 0 || GameService.Instance.GetUIManager().NotEnoughCoin(itemSO.buyCost * quantity) || GameService.Instance.GetUIManager().WeightOverload(itemSO.weight * quantity))
+            return;
+
+        
+        GameService.Instance.GetUIManager().ItemPurchased(hoverInput.gameObject.transform);
+        EventService.Instance.OnBuyingItemDecreaseCoin?.InvokeEvent(quantity * itemSO.buyCost);
+        EventService.Instance.OnBuyingItemIncreaesWeight?.InvokeEvent(quantity * itemSO.weight);
+        hoverInput.GetItemDisplay().DecereaseTotalQuntity(quantity);
+        HideDiscDisplay();
+        
+    }
+    private void SellButton()
+    {
+        if (quantity <= 0)
+            return;
+         
+        EventService.Instance.OnSellingItemIncreaseCoin?.InvokeEvent(quantity * itemSO.sellCost);
+        EventService.Instance.OnSellingItemDecreaseWeight?.InvokeEvent(quantity * itemSO.weight);
+        hoverInput.GetItemDisplay().DecereaseTotalQuntity(quantity);
+        HideDiscDisplay();
+        
+    }
+
     private void IncreaseQuantity()
     {
-        //if (quantity < hoverInput)
+        if (quantity < hoverInput.GetItemDisplay().GetTotalItemQuantity())
             quantity++;
     }
 

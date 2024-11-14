@@ -17,9 +17,10 @@ public class HoverInput : MonoBehaviour, IPointerEnterHandler,IPointerExitHandle
 
     //getter
     public bool GetIsItemInInevntory() => isItemInInventory;
+    public ItemDisplay GetItemDisplay() => itemDisplay;
     private void Awake()
     {
-        itemDisplay = GetComponentInParent<ItemDisplay>();
+        itemDisplay = GetComponent<ItemDisplay>();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -27,11 +28,8 @@ public class HoverInput : MonoBehaviour, IPointerEnterHandler,IPointerExitHandle
         if (eventData.pointerDrag != null && eventData.pointerDrag.GetComponent<DragableItem>().GetIsDraggingItem())
             return;
 
-        //if (eventData.pointerDrag != null)
-        //    Debug.Log(" dragging item " + eventData.pointerDrag + " " + eventData.pointerDrag.GetComponent<DragableItem>().GetIsDraggingItem());
         if (eventData.pointerEnter.name == itemCloneName) 
         {
-            Debug.Log("Got the inventoryslot");
             inventorySlot = GetComponentInParent<InventorySlot>();
         }
         itemDiscriptionDisplay.SetHoverInput(this);
@@ -47,13 +45,13 @@ public class HoverInput : MonoBehaviour, IPointerEnterHandler,IPointerExitHandle
     {
 
         yield return new WaitForSeconds(timeToWait);
-        if (itemDisplay != null)
+        if (itemDisplay != null && inventorySlot == null)
         {
             isItemInInventory = false;
             GameService.Instance.GetItemDiscDisplay().SetItemSO(itemDisplay.GetItemSO());
             EventService.Instance.OnShowDiscWindow?.InvokeEvent(Input.mousePosition);
         }
-        else
+        else if (inventorySlot != null)
         {
             isItemInInventory = true;
             GameService.Instance.GetItemDiscDisplay().SetItemSO(inventorySlot.GetItemSO());

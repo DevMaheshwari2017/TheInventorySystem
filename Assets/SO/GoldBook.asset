@@ -16,7 +16,7 @@ MonoBehaviour:
   weight: 5
   itemDiscription: 'A gold book which can increase any of your stat by 5 '
   rarity: 1
-  itemtypes: 0
+  itemtypes: 1
   buyCost: 125
   sellCost: 60
   itemName: Gold Book

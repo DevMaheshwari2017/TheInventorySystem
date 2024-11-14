@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
@@ -20,25 +17,24 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     private static bool isDraggingItem;
 
     //Getter
+    public ItemDisplay GetItemDisplay() => itemDisplay;
     public bool GetIsDraggingItem() => isDraggingItem;
    // Setter
     public void SetParentTransform(Transform transform)
     {
         parentAfterDrag = transform;
     }
-    public ItemDisplay GetItemDisplay() => itemDisplay;
+
     private void Awake()
     {
         canvas = GetComponentInParent<Canvas>();
-        //rectTransform = GetComponent<RectTransform>();
-        itemDisplay = GetComponentInParent<ItemDisplay>();
+        itemDisplay = GetComponent<ItemDisplay>();
 
     }
     private void Update()
     {
         if (!isDraggingItem)
         {
-            Debug.Log(" Dragging item is " + isDraggingItem);
             checkForItemSlotEmpty = itemDisplay.IsItemSOEmpty();
         }
     }
@@ -47,8 +43,13 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public void OnBeginDrag(PointerEventData eventData)
     {
        
-        if (checkForItemSlotEmpty == true)
+        if (checkForItemSlotEmpty == true
+            || GameService.Instance.GetUIManager().NotEnoughCoin(itemDisplay.GetItemSO().buyCost * itemDisplay.GetTotalItemQuantity())
+            || GameService.Instance.GetUIManager().WeightOverload(itemDisplay.GetItemSO().weight * itemDisplay.GetTotalItemQuantity()))
             return;
+
+        ItemDisplay itemCloneDisplay;
+        int totalQuantity = itemDisplay.GetTotalItemQuantity();
 
         isDraggingItem = true;
         itemClone = Instantiate(gameObject, transform.position, Quaternion.identity);
@@ -61,41 +62,57 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         itemClone.transform.SetParent(transform.root);
         itemClone.transform.SetAsLastSibling();
         itemClone.transform.localScale = gameObject.transform.localScale;
+
+        itemCloneDisplay = itemClone.GetComponent<ItemDisplay>();
+        if (itemCloneDisplay != null)
+        {
+            itemCloneDisplay.SetTotalQuantity(totalQuantity);
+        }
+        else
+        {
+            Debug.LogWarning("Item clone display is null");
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (checkForItemSlotEmpty == true)
+        if (checkForItemSlotEmpty == true || rectTransform == null 
+            || GameService.Instance.GetUIManager().NotEnoughCoin(itemDisplay.GetItemSO().buyCost * itemDisplay.GetTotalItemQuantity())
+            || GameService.Instance.GetUIManager().WeightOverload(itemDisplay.GetItemSO().weight * itemDisplay.GetTotalItemQuantity()))
             return;
+
         isDraggingItem = true;
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (checkForItemSlotEmpty == true)
+        if (checkForItemSlotEmpty == true || itemClone == null || canvasGroup == null)                    
             return;
 
         inventorySlot = eventData.pointerEnter.GetComponent<InventorySlot>();
         canvasGroup.blocksRaycasts = true;
         canvasGroup.alpha = 1f;
-        itemClone.transform.SetParent(parentAfterDrag, false);
 
         if (inventorySlot == null)
         {
-            Debug.LogError("InventorySlot empty");
-            //rectTransform.anchoredPosition = pos;
+            Debug.Log("Inventory is null destroying item clone");
             Destroy(itemClone);
             isDraggingItem = false;
         }
         else
         {
-            //itemDisplay.ClearItemSO();
-            Debug.Log("Found Inventory Slot");
+            Debug.Log("Found Inventory clearing item from shop and adding to inventory");
+            itemClone.transform.SetParent(parentAfterDrag, false);
+            itemDisplay.ClearItemSO();
             rectTransform.anchoredPosition = new Vector2(0, -1);
             itemClone.GetComponent<DragableItem>().enabled = false;
             isDraggingItem = false;
         }
-        Debug.Log("Parent after drag is : " + parentAfterDrag);
+    }
+
+    public void DestryItemCLone() 
+    {
+        Destroy(itemClone);
     }
 }

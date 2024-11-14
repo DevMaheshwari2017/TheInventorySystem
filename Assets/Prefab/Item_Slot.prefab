@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 9144689944360784588}
   - component: {fileID: 532672083009627008}
   - component: {fileID: 265085493262219189}
+  - component: {fileID: 4366932264998159754}
   - component: {fileID: 8269915431926407030}
   m_Layer: 5
   m_Name: icon
@@ -91,9 +92,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85bb1dedffac67b418a1805ddad2fae9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemDisplay: {fileID: 0}
-  inventorySlot: {fileID: 0}
   itemCloneName: icon(Clone)
+  itemDiscriptionDisplay: {fileID: 0}
 --- !u!114 &265085493262219189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,6 +108,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventorySlot: {fileID: 0}
   itemDisplay: {fileID: 0}
+--- !u!114 &4366932264998159754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858035319276426452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37c894371103cda4a90722050ffc33a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalItemQuantityText: {fileID: 2467691724935309700}
+  img: {fileID: 9144689944360784588}
+  soDataBaseContainer: {fileID: 11400000, guid: d0b82b7c4e2cb474a8acde3d339e1ce4, type: 2}
+  itemSO: {fileID: 0}
 --- !u!225 &8269915431926407030
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -429,7 +445,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5011888182800893148}
   - component: {fileID: 3091345591984746465}
-  - component: {fileID: 7266477325028389952}
   m_Layer: 5
   m_Name: Item_Slot
   m_TagString: Untagged
@@ -466,19 +481,3 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4863198123668825222}
   m_CullTransparentMesh: 1
---- !u!114 &7266477325028389952
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4863198123668825222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37c894371103cda4a90722050ffc33a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  totalItemQuantityText: {fileID: 2467691724935309700}
-  img: {fileID: 9144689944360784588}
-  soDataBaseContainer: {fileID: 11400000, guid: d0b82b7c4e2cb474a8acde3d339e1ce4, type: 2}
-  itemSO: {fileID: 0}
